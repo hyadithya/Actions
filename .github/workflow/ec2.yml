@@ -1,9 +1,11 @@
 name: Push-to-EC2
-#trigger deployment only on to main branch
+
+# Trigger deployment only on push to main branch
 on:
   push:
     branches:
       - main
+
 jobs:
   deploy:
     name: Deploy to EC2 on master branch push
@@ -28,4 +30,9 @@ jobs:
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            git pull
+            sudo apt-get -y update
+            sudo apt-get install -y apache2
+            sudo systemctl start apache2
+            sudo systemctl enable apache2
+            cd home
+            sudo mv * /var/www/html
